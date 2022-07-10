@@ -6,9 +6,9 @@ import (
 	"github.com/pkg/errors"
 )
 
-// configuration captures the plugin's external configuration as exposed in the Mattermost server
+// configuration captures the plugin's external configuration as exposed in the Workchat server
 // configuration, as well as values computed from the configuration. Any public fields will be
-// deserialized from the Mattermost server configuration in OnConfigurationChange.
+// deserialized from the Workchat server configuration in OnConfigurationChange.
 //
 // As plugins are inherently concurrent (hooks being called asynchronously), and the plugin
 // configuration can change at any time, access to the configuration must be synchronized. The
@@ -74,7 +74,7 @@ func (p *Plugin) setConfiguration(configuration *configuration) {
 func (p *Plugin) OnConfigurationChange() error {
 	var configuration = new(configuration)
 
-	// Load the public configuration fields from the Mattermost server configuration.
+	// Load the public configuration fields from the Workchat server configuration.
 	if err := p.API.LoadPluginConfiguration(configuration); err != nil {
 		return errors.Wrap(err, "failed to load plugin configuration")
 	}

@@ -5,7 +5,7 @@ MANIFEST_FILE ?= plugin.json
 GOPATH ?= $(shell go env GOPATH)
 GO_TEST_FLAGS ?= -race
 GO_BUILD_FLAGS ?=
-MM_UTILITIES_DIR ?= ../mattermost-utilities
+MM_UTILITIES_DIR ?= ../workchat-utilities
 
 export GO111MODULE=on
 
@@ -112,7 +112,7 @@ dist:	apply server webapp bundle
 
 ## Installs the plugin to a (development) server.
 ## It uses the API if appropriate environment variables are defined,
-## and otherwise falls back to trying to copy the plugin to a sibling mattermost-server directory.
+## and otherwise falls back to trying to copy the plugin to a sibling workchat-server directory.
 .PHONY: deploy
 deploy: dist
 	./build/bin/deploy $(PLUGIN_ID) dist/$(BUNDLE_NAME)
@@ -146,7 +146,7 @@ endif
 i18n-extract:
 ifneq ($(HAS_WEBAPP),)
 ifeq ($(HAS_MM_UTILITIES),)
-	@echo "You must clone github.com/mattermost/mattermost-utilities repo in .. to use this command"
+	@echo "You must clone gitlab.com/w1572/workchat-utilities repo in .. to use this command"
 else
 	cd $(MM_UTILITIES_DIR) && npm install && npm run babel && node mmjstool/build/index.js i18n extract-webapp --webapp-dir $(PWD)/webapp
 endif

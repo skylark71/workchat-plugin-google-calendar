@@ -5,15 +5,15 @@ import (
 	"path/filepath"
 	"sync"
 
-	"github.com/mattermost/mattermost-server/v5/model"
 	"github.com/pkg/errors"
+	"gitlab.com/w1572/backend/model"
 
-	"github.com/mattermost/mattermost-server/v5/plugin"
+	"gitlab.com/w1572/backend/plugin"
 )
 
-// Plugin implements the interface expected by the Mattermost server to communicate between the server and plugin processes.
+// Plugin implements the interface expected by the Workchat server to communicate between the server and plugin processes.
 type Plugin struct {
-	plugin.MattermostPlugin
+	plugin.WorkchatPlugin
 
 	// configurationLock synchronizes access to the configuration.
 	configurationLock sync.RWMutex

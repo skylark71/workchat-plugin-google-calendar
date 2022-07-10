@@ -1,5 +1,3 @@
-// main handles deployment of the plugin to a development server using either the Client4 API
-// or by copying the plugin bundle into a sibling mattermost-server/plugin directory.
 package main
 
 import (
@@ -8,9 +6,9 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/mattermost/mattermost-server/v5/model"
 	"github.com/mholt/archiver/v3"
 	"github.com/pkg/errors"
+	"gitlab.com/w1572/backend/model"
 )
 
 func main() {
@@ -37,7 +35,7 @@ func deploy() error {
 	adminToken := os.Getenv("MM_ADMIN_TOKEN")
 	adminUsername := os.Getenv("MM_ADMIN_USERNAME")
 	adminPassword := os.Getenv("MM_ADMIN_PASSWORD")
-	copyTargetDirectory, _ := filepath.Abs("../mattermost-server")
+	copyTargetDirectory, _ := filepath.Abs("../workchat-server")
 
 	if siteURL != "" {
 		client := model.NewAPIv4Client(siteURL)
@@ -68,7 +66,7 @@ func deploy() error {
 		return errors.Wrapf(err, "failed to stat %s", copyTargetDirectory)
 	}
 
-	log.Printf("Installing plugin to mattermost-server found in %s.", copyTargetDirectory)
+	log.Printf("Installing plugin to workchat-server found in %s.", copyTargetDirectory)
 	log.Print("Server restart required to load updated plugin.")
 	return copyPlugin(pluginID, copyTargetDirectory, bundlePath)
 }
@@ -97,7 +95,7 @@ func uploadPlugin(client *model.Client4, pluginID, bundlePath string) error {
 	return nil
 }
 
-// copyPlugin attempts to install a plugin by copying it to a sibling ../mattermost-server/plugin
+// copyPlugin attempts to install a plugin by copying it to a sibling ../workchat-server/plugin
 // directory. A server restart is required before the plugin will start.
 func copyPlugin(pluginID, targetPath, bundlePath string) error {
 	targetPath = filepath.Join(targetPath, "plugins")

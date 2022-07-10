@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/mattermost/mattermost-server/v5/model"
-	"github.com/mattermost/mattermost-server/v5/plugin"
+	"gitlab.com/w1572/backend/model"
+	"gitlab.com/w1572/backend/plugin"
 	"golang.org/x/oauth2"
 	"google.golang.org/api/calendar/v3"
 )
@@ -16,7 +16,7 @@ import (
 // ServeHTTP allows the plugin to implement the http.Handler interface. Requests destined for the
 // /plugins/{id} path will be routed to the plugin.
 //
-// The Mattermost-User-Id header will be present if (and only if) the request is by an
+// The Workchat-User-Id header will be present if (and only if) the request is by an
 // authenticated user.
 //
 // This demo implementation sends back whether or not the plugin hooks are currently enabled. It
@@ -41,7 +41,7 @@ func (p *Plugin) ServeHTTP(c *plugin.Context, w http.ResponseWriter, r *http.Req
 }
 
 func (p *Plugin) connectCalendar(w http.ResponseWriter, r *http.Request) {
-	autheduserId := r.Header.Get("Mattermost-User-ID")
+	autheduserId := r.Header.Get("Workchat-User-ID")
 
 	if autheduserId == "" {
 		http.Error(w, "Not authorized", http.StatusUnauthorized)
@@ -76,7 +76,7 @@ func (p *Plugin) completeCalendar(w http.ResponseWriter, r *http.Request) {
 		</body>
 	</html>
 	`
-	autheduserId := r.Header.Get("Mattermost-User-ID")
+	autheduserId := r.Header.Get("Workchat-User-ID")
 	state := r.FormValue("state")
 	code := r.FormValue("code")
 	userId := strings.Split(state, "_")[1]
@@ -131,8 +131,8 @@ func (p *Plugin) completeCalendar(w http.ResponseWriter, r *http.Request) {
 	p.startCronJob(autheduserId)
 
 	// Post intro post
-	message := "#### Welcome to the Mattermost Google Calendar Plugin!\n" +
-		"You've successfully connected your Mattermost account to your Google Calendar.\n" +
+	message := "#### Welcome to the Workchat Google Calendar Plugin!\n" +
+		"You've successfully connected your Workchat account to your Google Calendar.\n" +
 		"Please type **/calendar help** to understand how to user this plugin. "
 
 	p.CreateBotDMPost(userId, message)
@@ -151,7 +151,7 @@ func (p *Plugin) deleteEvent(w http.ResponseWriter, r *http.Request) {
 		</head>
 	</html>
 	`
-	userId := r.Header.Get("Mattermost-User-ID")
+	userId := r.Header.Get("Workchat-User-ID")
 	eventID := r.URL.Query().Get("evtid")
 	calendarID := p.getPrimaryCalendarID(userId)
 	srv, err := p.getCalendarService(userId)
@@ -184,7 +184,7 @@ func (p *Plugin) handleEventResponse(w http.ResponseWriter, r *http.Request) {
 	</html>
 	`
 
-	userId := r.Header.Get("Mattermost-User-ID")
+	userId := r.Header.Get("Workchat-User-ID")
 	response := r.URL.Query().Get("response")
 	eventID := r.URL.Query().Get("evtid")
 	calendarID := p.getPrimaryCalendarID(userId)

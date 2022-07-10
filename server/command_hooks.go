@@ -2,15 +2,16 @@ package main
 
 import (
 	"fmt"
-	"github.com/pkg/errors"
 	"regexp"
 	"strconv"
 	"strings"
 	"time"
 
-	"github.com/mattermost/mattermost-plugin-api/experimental/command"
-	"github.com/mattermost/mattermost-server/v5/model"
-	"github.com/mattermost/mattermost-server/v5/plugin"
+	"github.com/pkg/errors"
+
+	"gitlab.com/w1572/backend/model"
+	"gitlab.com/w1572/backend/plugin"
+	"gitlab.com/w1572/workchat-plugin-api/experimental/command"
 	"google.golang.org/api/calendar/v3"
 )
 
@@ -20,7 +21,7 @@ const customFormat = "2006-01-02@15:04"
 const customFormatNoTime = "2006-01-02"
 
 //CommandHelp - about
-const CommandHelp = `* |/calendar connect| - Connect your Google Calendar with your Mattermost account
+const CommandHelp = `* |/calendar connect| - Connect your Google Calendar with your Workchat account
 * |/calendar list [number_of_events]| - List the upcoming X number of events.
 	* |number_of_events| should be a number or can be left blank. By default is set to 5
 * |/calendar summary [date]| - Get a break down of a particular date.
@@ -45,7 +46,7 @@ func (p *Plugin) getCommand() (*model.Command, error) {
 		AutoComplete:         true,
 		AutoCompleteDesc:     "Available commands: connect, list, summary, create, help",
 		AutoCompleteHint:     "[command]",
-		AutocompleteData: getAutocompleteData(),
+		AutocompleteData:     getAutocompleteData(),
 		AutocompleteIconData: iconData,
 	}, nil
 }
@@ -53,14 +54,14 @@ func (p *Plugin) getCommand() (*model.Command, error) {
 func getAutocompleteData() *model.AutocompleteData {
 	cal := model.NewAutocompleteData("calendar", "[command]", "Available commands: connect, list, summary, create, help")
 
-	connect := model.NewAutocompleteData("connect","", "Connect your Google Calendar with your Mattermost account")
+	connect := model.NewAutocompleteData("connect", "", "Connect your Google Calendar with your Workchat account")
 	cal.AddCommand(connect)
 
 	list := model.NewAutocompleteData("list", "[number_of_events]", "List the upcoming X number of events")
 	list.AddTextArgument("Number of events to list", "[number_of_events]", "^[0-9]+$")
 	cal.AddCommand(list)
 
-	summary := model.NewAutocompleteData("summary","[date]", "Get a breakdown of a particular date")
+	summary := model.NewAutocompleteData("summary", "[date]", "Get a breakdown of a particular date")
 	summary.AddTextArgument("The date to view in YYYY-MM-DD format", "[date]", "")
 	cal.AddCommand(summary)
 
@@ -280,5 +281,5 @@ func (p *Plugin) executeCommandCreate(args *model.CommandArgs) string {
 }
 
 func (p *Plugin) executeCommandHelp(args *model.CommandArgs) string {
-	return "###### Mattermost Google Calendar Plugin - Slash Command Help\n" + strings.Replace(CommandHelp, "|", "`", -1)
+	return "###### Workchat Google Calendar Plugin - Slash Command Help\n" + strings.Replace(CommandHelp, "|", "`", -1)
 }
